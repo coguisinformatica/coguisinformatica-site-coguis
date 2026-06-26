@@ -1,0 +1,5 @@
+User-agent: *
+
+Allow: /
+
+Sitemap: https://coguisinformatica.github.io/coguisinformatica-site-coguis/sitemap.xml
