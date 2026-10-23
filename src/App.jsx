@@ -559,10 +559,53 @@ function Contact() {
         começa com um <span>oi.</span>
       </h2>
       <p>Um computador melhor. Uma ideia online. Uma rotina mais leve.</p>
-      <Button>Oi, Coguis! Vamos conversar</Button>
+      <Button
+        href={`${whatsapp}?text=${encodeURIComponent("Olá, Coguis! Gostaria de agendar um atendimento.")}`}
+      >
+        Agendar atendimento pelo WhatsApp
+      </Button>
       <span className="contact-footnote">
-        <MessageCircle size={14} /> Direto no WhatsApp. De pessoa para pessoa.
+        <MessageCircle size={14} /> Atendimento com agendamento. De pessoa para
+        pessoa.
       </span>
+      <div className="business-details">
+        <div>
+          <h3>Reparação e manutenção de computadores em São Paulo</h3>
+          <p>
+            {site.name} · {site.address.neighborhood}
+          </p>
+          <address>
+            {site.address.streetAddress}
+            <br />
+            {site.address.neighborhood}, {site.address.addressLocality} –{" "}
+            {site.address.addressRegion}
+            <br />
+            CEP {site.address.postalCode}
+          </address>
+          <a href={site.googleMaps}>Ver localização no Google Maps ↗</a>
+          <p>Área de atendimento: {site.areaServed.name}, SP.</p>
+        </div>
+        <div>
+          <h3>Horário de atendimento</h3>
+          <dl>
+            {site.openingHours.map((hours) => (
+              <div key={hours.label}>
+                <dt>{hours.label}</dt>
+                <dd>
+                  {hours.opens.replace(":", "h")} às{" "}
+                  {hours.closes.replace(":", "h")}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p>{site.closedDayLabel}</p>
+          <p>
+            Agende antes pelo WhatsApp{" "}
+            <a href={site.whatsapp}>{site.telephoneDisplay}</a>.
+          </p>
+          <p>Atendimento em português e inglês.</p>
+        </div>
+      </div>
     </section>
   );
 }

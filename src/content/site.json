@@ -10,5 +10,47 @@
     "https://www.instagram.com/coguisinformatica/",
     "https://github.com/coguisinformatica"
   ],
-  "googleMaps": "https://www.google.com/maps?cid=4843789275991588309"
+  "googleMaps": "https://www.google.com/maps?cid=4843789275991588309",
+  "category": "Reparação e manutenção de computadores",
+  "description": "Suporte técnico, reparação e manutenção de computadores e notebooks em São Paulo. Manutenção preventiva e corretiva, upgrades e suporte para pessoas e empresas, com atendimento mediante agendamento.",
+  "address": {
+    "streetAddress": "Rua Guarizinho, 242",
+    "neighborhood": "Casa Verde Média",
+    "addressLocality": "São Paulo",
+    "addressRegion": "SP",
+    "postalCode": "02530-010",
+    "addressCountry": "BR"
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "São Paulo"
+  },
+  "openingHours": [
+    {
+      "label": "Segunda a sexta",
+      "days": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "08:00",
+      "closes": "18:00"
+    },
+    {
+      "label": "Sábado",
+      "days": [
+        "Saturday"
+      ],
+      "opens": "09:00",
+      "closes": "13:00"
+    }
+  ],
+  "closedDayLabel": "Domingo: fechado",
+  "appointmentRequired": true,
+  "languages": [
+    "Português",
+    "Inglês"
+  ]
 }

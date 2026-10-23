@@ -1205,3 +1205,56 @@ h2 > span {
 .article-byline {
   flex-wrap: wrap;
 }
+.business-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 45px;
+  text-align: left;
+  margin: 40px auto 0;
+  padding-top: 30px;
+  border-top: 1px solid #b38bea25;
+  max-width: 840px;
+}
+.business-details h3 {
+  font-size: 17px;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+  color: #e9ddf7;
+  margin-bottom: 14px;
+}
+.business-details p,
+.business-details address,
+.business-details dl {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #b8a9c9;
+  font-style: normal;
+  margin: 10px 0;
+}
+.business-details a {
+  color: #d1b4f5;
+  font-size: 12px;
+}
+.business-details dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+.business-details dd {
+  white-space: nowrap;
+}
+@media (max-width: 700px) {
+  .business-details {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    margin-top: 30px;
+  }
+  .business-details h3 {
+    font-size: 16px;
+  }
+  .business-details p,
+  .business-details address,
+  .business-details dl {
+    font-size: 11px;
+  }
+}

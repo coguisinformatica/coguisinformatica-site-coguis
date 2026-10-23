@@ -180,14 +180,28 @@ test("production HTML exposes content and consistent SEO without JavaScript", as
     ];
     assert.equal(schemas.length, 1, "A single generated schema graph");
     const graph = JSON.parse(schemas[0][1])["@graph"];
-    const organization = graph.find((n) => n["@type"] === "Organization");
+    const organization = graph.find((n) => n["@type"] === "LocalBusiness");
     assert.equal(organization.name, site.name);
     assert.equal(organization.telephone, site.telephone);
-    assert.equal(
-      organization.address,
-      undefined,
-      "Unverified address must not be invented",
+    assert.equal(organization.address.streetAddress, "Rua Guarizinho, 242");
+    assert.equal(organization.address.postalCode, "02530-010");
+    assert.equal(organization.address.addressLocality, "São Paulo");
+    assert.equal(organization.areaServed.name, "São Paulo");
+    assert.equal(organization.hasMap, site.googleMaps);
+    assert.deepEqual(
+      organization.openingHoursSpecification.map((hours) => [
+        hours.opens,
+        hours.closes,
+      ]),
+      [
+        ["08:00", "18:00"],
+        ["09:00", "13:00"],
+      ],
     );
+    assert.equal(organization.openingHoursSpecification[0].dayOfWeek.length, 5);
+    assert.deepEqual(organization.openingHoursSpecification[1].dayOfWeek, [
+      "https://schema.org/Saturday",
+    ]);
     assert.equal(
       organization.aggregateRating,
       undefined,
@@ -223,6 +237,26 @@ test("production HTML exposes content and consistent SEO without JavaScript", as
           .getByRole("link", { name: /Fale com a Coguis/ })
           .getAttribute("href")
       ).includes("wa.me/"),
+    );
+    await staticPage
+      .getByRole("heading", { name: "Horário de atendimento" })
+      .waitFor();
+    assert.ok(
+      (await staticPage.locator(".business-details").innerText()).includes(
+        "08h00 às 18h00",
+      ),
+    );
+    assert.ok(
+      (await staticPage.locator(".business-details").innerText()).includes(
+        "Domingo: fechado",
+      ),
+    );
+    assert.ok(
+      (
+        await staticPage
+          .getByRole("link", { name: "Agendar atendimento pelo WhatsApp" })
+          .getAttribute("href")
+      ).includes("wa.me/5511960281070?text="),
     );
     await staticPage.goto(origin + "/blog/artigos/notebook-esquentando.html");
     assert.ok((await staticPage.locator(".prose").innerText()).length > 5000);

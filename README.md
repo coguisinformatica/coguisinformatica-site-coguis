@@ -64,4 +64,4 @@ Instagram: https://www.instagram.com/coguisinformatica/
 
 ## SEO e Google
 
-O build gera HTML com conteúdo e metadados próprios para cada página. Categorias vazias ficam fora da indexação. Dados do Perfil da Empresa e a configuração privada do Search Console ainda dependem de confirmação do proprietário. Veja [o guia de SEO e Google](docs/SEO-GOOGLE.md).
+O build gera HTML com conteúdo e metadados próprios para cada página. Categorias vazias ficam fora da indexação. Nome, categoria, telefone, endereço, horários e área de atendimento foram alinhados às capturas do Perfil da Empresa enviadas pelo proprietário. A publicação e a configuração privada do Search Console ainda não foram realizadas. Veja [o guia de SEO e Google](docs/SEO-GOOGLE.md).

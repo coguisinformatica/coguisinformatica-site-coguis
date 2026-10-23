@@ -19,9 +19,46 @@ const files = (dir) =>
         : [],
   );
 const organization = {
-  "@type": "Organization",
+  "@type": "LocalBusiness",
   "@id": absolute("#organization"),
   name: site.name,
+  description: site.description,
+  address: {
+    "@type": "PostalAddress",
+    ...Object.fromEntries(
+      Object.entries(site.address).filter(([key]) => key !== "neighborhood"),
+    ),
+  },
+  areaServed: site.areaServed,
+  hasMap: site.googleMaps,
+  image: absolute(site.logo),
+  openingHoursSpecification: site.openingHours.map((hours) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: hours.days.map((day) => `https://schema.org/${day}`),
+    opens: hours.opens,
+    closes: hours.closes,
+  })),
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: site.telephone,
+    contactType: "customer service",
+    availableLanguage: site.languages,
+  },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: site.category,
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: site.category,
+          serviceType: site.category,
+          areaServed: site.areaServed,
+        },
+      },
+    ],
+  },
   url: site.url,
   logo: { "@type": "ImageObject", url: absolute(site.logo) },
   telephone: site.telephone,
@@ -49,7 +86,7 @@ for (const path of ["index.html", ...files("blog")]) {
     !template &&
     (!category || articles.some((a) => a.category === category[0]));
   const title = home
-    ? "Assistência técnica e soluções digitais | Coguis Informática"
+    ? "Manutenção de computadores em São Paulo | Coguis Informática"
     : article
       ? `${article.title} | Blog da Coguis`
       : category
@@ -58,7 +95,7 @@ for (const path of ["index.html", ...files("blog")]) {
           ? "Modelo editorial | Coguis Informática"
           : "Dicas de tecnologia, manutenção e presença digital | Blog da Coguis";
   const description = home
-    ? "Manutenção de computadores e notebooks, upgrades, backup e criação de sites. Conheça a Coguis Informática e fale com nossa equipe pelo WhatsApp."
+    ? "Reparação e manutenção de computadores e notebooks em São Paulo. Coguis Informática, na Casa Verde Média: suporte e upgrades com agendamento pelo WhatsApp."
     : article
       ? article.summary
       : category
