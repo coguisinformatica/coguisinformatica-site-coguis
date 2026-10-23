@@ -1,235 +1,60 @@
-# 🍄 Coguis Informática
+# Coguis Informática 🍄
 
-> **Tecnologia que vai até você.**
+Site institucional e blog da Coguis, migrados para **React 19, Tailwind CSS 4 e Vite 8**. Identidade escura em preto e roxo, com o mascote original da marca.
 
-Site institucional oficial da **Coguis Informática**, desenvolvido com foco em performance, organização, acessibilidade e escalabilidade.
+## Desenvolvimento
 
-O projeto representa a presença digital da empresa, reunindo serviços de assistência técnica, desenvolvimento web, presença digital e produção de conteúdo através do Blog da Coguis.
+Requer Node.js 22.12+ (recomendado: Node.js 24).
 
----
-
-# 🌐 Site Oficial
-
-🔗 https://coguisinformatica.github.io/coguisinformatica-site-coguis/
-
----
-
-# 📖 Sobre o Projeto
-
-O site da Coguis Informática foi desenvolvido para oferecer uma experiência moderna, intuitiva e totalmente responsiva, apresentando os principais serviços da empresa e fortalecendo sua presença digital.
-
-Além do site institucional, o projeto evoluiu para uma arquitetura organizada, documentada e preparada para crescimento contínuo, servindo como base para futuros projetos da Coguis.
-
----
-
-# ✨ Principais Recursos
-
-- 🍄 Site institucional completo
-- 📝 Blog oficial da Coguis
-- 📱 Layout totalmente responsivo
-- ⚡ Alto desempenho
-- ♿ Boas práticas de acessibilidade
-- 🔍 Estrutura preparada para SEO
-- 🎨 Design System próprio
-- 🧩 Componentização do CSS
-- 📚 Documentação técnica completa
-
----
-
-# 💼 Serviços Apresentados
-
-- 💻 Manutenção de computadores
-- 🖥️ Manutenção de notebooks
-- ⚙️ Upgrade SSD e Memória RAM
-- 🛡️ Remoção de vírus
-- 💾 Backup e recuperação de dados
-- 🌐 Desenvolvimento de sites
-- 📈 Presença Digital
-- 🔒 Segurança da Informação
-- 🏢 Soluções para empresas
-- 🚚 Busca e entrega de equipamentos
-
----
-
-# ⭐ Diferenciais
-
-- Atendimento humanizado
-- Transparência durante todo o serviço
-- Privacidade e proteção de dados
-- Boas práticas alinhadas à LGPD
-- Desenvolvimento moderno
-- Suporte residencial e empresarial
-
----
-
-# 🛠 Tecnologias Utilizadas
-
-## Front-end
-
-- HTML5
-- CSS3
-- JavaScript (ES6)
-
-## Ferramentas
-
-- Git
-- GitHub
-- GitHub Pages
-- Visual Studio Code
-
----
-
-# 🏗 Arquitetura CSS
-
-O projeto utiliza uma arquitetura modular organizada em camadas.
-
-```text
-css/
-
-├── base/
-│   ├── variables.css
-│   └── base.css
-│
-├── components/
-│   ├── button.css
-│   ├── cards.css
-│   ├── container.css
-│   ├── sections.css
-│   ├── tags.css
-│   └── titles.css
-│
-├── layout/
-│   ├── header.css
-│   ├── footer.css
-│   └── whatsapp.css
-│
-├── sections/
-│   ├── home-hero.css
-│   ├── trust.css
-│   ├── manifesto.css
-│   ├── services-showcase.css
-│   ├── split-section.css
-│   ├── social-proof.css
-│   ├── web-services.css
-│   ├── digital-showcase.css
-│   ├── final-contact.css
-│   └── responsive.css
-│
-├── blog/
-│
-└── style.css
+```sh
+npm ci
+npm run dev
 ```
 
----
+O Vite fornece atualização instantânea durante a edição. Não use mais `python -m http.server` para desenvolver: agora o JSX e o Tailwind precisam do Vite.
 
-# 📁 Estrutura do Projeto
-
-```text
-coguisinformatica-site-coguis/
-
-├── index.html
-├── blog.html
-├── README.md
-│
-├── css/
-├── js/
-├── images/
-├── screenshots/
-│
-└── docs/
-    ├── DESIGN-SYSTEM.md
-    ├── BLOG-CSS-ARCHITECTURE.md
-    └── SITE-CSS-ARCHITECTURE.md
+```sh
+npm run build
+npm run preview
+npm test
 ```
 
----
+Os testes usam o build em `dist/`, iniciam um preview próprio e verificam as 11 páginas públicas, imagens carregadas, erros de JavaScript, menu mobile, FAQ, busca, categorias e conteúdo dos artigos. Execute o build antes dos testes. O ambiente cloud já possui Chromium. Em outra máquina, execute `npx playwright install chromium`; alternativamente, informe o executável em `CHROMIUM_PATH`.
 
-# 📚 Documentação
+## Estrutura
 
-O projeto possui documentação própria para facilitar manutenção e evolução.
+- `src/main.jsx`: componentes React, home, listagem do blog e leitura de artigos.
+- `src/styles.css`: Tailwind e identidade visual responsiva, com foco visível e respeito à preferência por movimento reduzido.
+- `src/content/articles.json`: conteúdo completo dos artigos existentes, migrado do HTML original.
+- `index.html` e `blog/**/*.html`: entradas HTML com metadados específicos. Os endereços públicos existentes foram mantidos.
+- `images/`: acervo original da marca, copiado para `dist/images` no build.
+- `tests/site.test.mjs`: testes funcionais com Chromium e o runner nativo do Node.
+- `css/` e `js/`: implementação antiga, mantida como referência; não é carregada pela aplicação React.
 
-- 🍄 Design System
-- 🍄 Arquitetura CSS da Home
-- 🍄 Arquitetura CSS do Blog
+## Blog
 
-Toda a documentação encontra-se na pasta:
+A busca funciona no navegador, sem API ou credenciais. Categorias sem artigos apresentam um estado vazio, sem links ou imagens fictícias.
 
-```text
-docs/
+Para publicar um artigo, adicione um registro em `src/content/articles.json` e uma entrada HTML em `blog/artigos/<slug>.html`, copiando a estrutura de uma entrada existente e atualizando seus metadados. Veja [o guia do blog](blog/README.md).
+
+O campo `body` contém HTML editorial local e confiável. Não passe conteúdo de usuários ou APIs diretamente para esse campo sem sanitização.
+
+## GitHub Pages
+
+O workflow `.github/workflows/deploy.yml` instala dependências com o lockfile, gera o build com a base do repositório e publica `dist/`. Em **Settings → Pages**, selecione **GitHub Actions** como origem. O workflow só executará após o código estar no GitHub; nenhuma publicação foi realizada durante a migração.
+
+Para gerar o mesmo build localmente:
+
+```sh
+VITE_BASE_PATH=/coguisinformatica-site-coguis/ npm run build
 ```
 
----
-
-# 📸 Capturas de Tela
-
-## Home
-
-![Home](screenshots/home.png)
-
----
-
-## Serviços
-
-![Serviços](screenshots/servicos.png)
-
----
-
-## Avaliações
-
-![Avaliações](screenshots/avaliacao.png)
-
----
+Para domínio próprio, use a base `/` e ajuste as URLs canônicas, sitemap e metadados ao domínio. A navegação usa entradas HTML reais, sem depender de redirecionamento de SPA para acessar artigos diretamente.
 
 ## Contato
 
-![Contato](screenshots/contato.png)
+WhatsApp: https://wa.me/5511960281070
 
----
+Instagram: https://www.instagram.com/coguisinformatica/
 
-# 🎯 Objetivos do Projeto
-
-- Fortalecer a presença digital da Coguis Informática.
-- Demonstrar profissionalismo e organização.
-- Servir como base para futuros projetos.
-- Aplicar boas práticas de desenvolvimento Front-end.
-- Evoluir continuamente através de documentação e componentização.
-
----
-
-# 🚀 Próximas Evoluções
-
-- Sistema de artigos do Blog
-- Busca de conteúdo
-- Categorias de artigos
-- Integração com APIs públicas
-- Novos componentes da Coguis UI
-- Melhorias contínuas de SEO
-- Otimizações de performance
-
----
-
-# 📬 Contato
-
-📧 **E-mail**
-
-coguisinformatica@gmail.com
-
-📸 **Instagram**
-
-https://www.instagram.com/coguisinformatica
-
-⭐ **Google Business Profile**
-
-https://share.google/F29qjidETwMLqX9dq
-
-🌐 **Site Oficial**
-
-https://coguisinformatica.github.io/coguisinformatica-site-coguis/
-
----
-
-# 📄 Licença
-
-Este projeto foi desenvolvido para uso institucional da **Coguis Informática**.
-
-© 2026 Coguis Informática — Todos os direitos reservados.
+© Coguis Informática. Todos os direitos reservados.
