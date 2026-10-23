@@ -1158,3 +1158,50 @@ h2 > span {
 .hero-art {
   overflow: clip;
 }
+.footer-business {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 18px;
+  font-size: 11px;
+  font-style: normal;
+  color: #a79bb6;
+}
+.footer-business strong {
+  font-weight: 500;
+  color: #c3b5d3;
+}
+.footer-business a:hover {
+  color: #d3b6ff;
+}
+.breadcrumbs {
+  margin-bottom: 30px;
+  font-size: 11px;
+  color: #b6a9c6;
+}
+.breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.breadcrumbs li {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.breadcrumbs li + li::before {
+  content: "/";
+  color: #6b5d7c;
+}
+.breadcrumbs a:hover {
+  color: #d3b6ff;
+}
+.breadcrumbs [aria-current] {
+  color: #92839f;
+}
+.article-byline {
+  flex-wrap: wrap;
+}

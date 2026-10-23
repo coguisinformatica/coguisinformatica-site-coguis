@@ -23,7 +23,10 @@ Os testes usam o build em `dist/`, iniciam um preview próprio e verificam as 11
 
 ## Estrutura
 
-- `src/main.jsx`: componentes React, home, listagem do blog e leitura de artigos.
+- `src/App.jsx`: componentes React, home, listagem do blog e leitura de artigos.
+- `src/main.jsx`: inicialização e hidratação do React.
+- `src/content/site.json`: identidade da empresa e URL canônica.
+- `scripts/seo.mjs` e `scripts/prerender.mjs`: metadados, sitemap e HTML com conteúdo antes do JavaScript.
 - `src/styles.css`: Tailwind e identidade visual responsiva, com foco visível e respeito à preferência por movimento reduzido.
 - `src/content/articles.json`: conteúdo completo dos artigos existentes, migrado do HTML original.
 - `index.html` e `blog/**/*.html`: entradas HTML com metadados específicos. Os endereços públicos existentes foram mantidos.
@@ -58,3 +61,7 @@ WhatsApp: https://wa.me/5511960281070
 Instagram: https://www.instagram.com/coguisinformatica/
 
 © Coguis Informática. Todos os direitos reservados.
+
+## SEO e Google
+
+O build gera HTML com conteúdo e metadados próprios para cada página. Categorias vazias ficam fora da indexação. Dados do Perfil da Empresa e a configuração privada do Search Console ainda dependem de confirmação do proprietário. Veja [o guia de SEO e Google](docs/SEO-GOOGLE.md).

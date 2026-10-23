@@ -146,3 +146,87 @@ test("blog search and category empty states work, articles retain full text", as
   await page.goto(origin + "/blog/artigos/notebook-esquentando.html");
   assert.ok((await page.locator(".prose").innerText()).length > 5000);
 });
+
+test("production HTML exposes content and consistent SEO without JavaScript", async () => {
+  const { readFileSync, existsSync } = await import("node:fs");
+  const site = JSON.parse(readFileSync("src/content/site.json", "utf8"));
+  const xml = readFileSync("dist/sitemap.xml", "utf8");
+  const urls = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1]);
+  assert.equal(urls.length, 6);
+  assert.equal(new Set(urls).size, urls.length);
+  assert.ok(
+    readFileSync("dist/robots.txt", "utf8").includes(
+      `Sitemap: ${site.url}sitemap.xml`,
+    ),
+  );
+  for (const url of urls) {
+    const path = url.slice(site.url.length) || "index.html";
+    const response = await fetch(
+      origin + "/" + (path === "index.html" ? "" : path),
+    );
+    const html = await response.text();
+    assert.equal(response.status, 200);
+    assert.match(html, /<h1[\s>]/);
+    assert.match(html, /<div id="root">[\s\S]*Coguis/);
+    assert.ok(html.includes(`href="${url}"`), `canonical ${path}`);
+    assert.match(
+      html,
+      /name="robots" content="index, follow, max-image-preview:large"/,
+    );
+    const schemas = [
+      ...html.matchAll(
+        /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
+      ),
+    ];
+    assert.equal(schemas.length, 1, "A single generated schema graph");
+    const graph = JSON.parse(schemas[0][1])["@graph"];
+    const organization = graph.find((n) => n["@type"] === "Organization");
+    assert.equal(organization.name, site.name);
+    assert.equal(organization.telephone, site.telephone);
+    assert.equal(
+      organization.address,
+      undefined,
+      "Unverified address must not be invented",
+    );
+    assert.equal(
+      organization.aggregateRating,
+      undefined,
+      "Do not fabricate ratings",
+    );
+    const posting = graph.find((n) => n["@type"] === "BlogPosting");
+    if (posting) {
+      assert.ok(existsSync("dist/" + posting.image[0].slice(site.url.length)));
+      assert.match(posting.datePublished, /^\d{4}-\d{2}-\d{2}$/);
+      assert.ok(html.includes('class="prose"'));
+    }
+  }
+  for (const path of [
+    "blog/categorias/dicas.html",
+    "blog/templates/article-template.html",
+  ]) {
+    assert.match(
+      readFileSync(`dist/${path}`, "utf8"),
+      /name="robots" content="noindex, follow"/,
+    );
+    assert.ok(!urls.includes(site.url + path));
+  }
+  const noJs = await browser.newContext({ javaScriptEnabled: false });
+  try {
+    const staticPage = await noJs.newPage();
+    await staticPage.goto(origin + "/");
+    assert.ok(
+      (await staticPage.locator("h1").innerText()).includes("Tecnologia"),
+    );
+    assert.ok(
+      (
+        await staticPage
+          .getByRole("link", { name: /Fale com a Coguis/ })
+          .getAttribute("href")
+      ).includes("wa.me/"),
+    );
+    await staticPage.goto(origin + "/blog/artigos/notebook-esquentando.html");
+    assert.ok((await staticPage.locator(".prose").innerText()).length > 5000);
+  } finally {
+    await noJs.close();
+  }
+});

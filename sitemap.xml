@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-    <url>
-        <loc>https://coguisinformatica.github.io/coguisinformatica-site-coguis/</loc>
-        <lastmod>2026-06-26</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
-    </url>
-
+  <url><loc>https://coguisinformatica.github.io/coguisinformatica-site-coguis/</loc></url>
+  <url><loc>https://coguisinformatica.github.io/coguisinformatica-site-coguis/blog/artigos/notebook-esquentando.html</loc></url>
+  <url><loc>https://coguisinformatica.github.io/coguisinformatica-site-coguis/blog/artigos/o-que-e-presenca-digital.html</loc></url>
+  <url><loc>https://coguisinformatica.github.io/coguisinformatica-site-coguis/blog/categorias/manutencao.html</loc></url>
+  <url><loc>https://coguisinformatica.github.io/coguisinformatica-site-coguis/blog/categorias/presenca-digital.html</loc></url>
+  <url><loc>https://coguisinformatica.github.io/coguisinformatica-site-coguis/blog/index.html</loc></url>
 </urlset>
