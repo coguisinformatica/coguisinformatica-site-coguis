@@ -65,3 +65,9 @@ Instagram: https://www.instagram.com/coguisinformatica/
 ## SEO e Google
 
 O build gera HTML com conteúdo e metadados próprios para cada página. Categorias vazias ficam fora da indexação. Nome, categoria, telefone, endereço, horários e área de atendimento foram alinhados às capturas do Perfil da Empresa enviadas pelo proprietário. A publicação e a configuração privada do Search Console ainda não foram realizadas. Veja [o guia de SEO e Google](docs/SEO-GOOGLE.md).
+
+## Imagens e contatos
+
+O build e a inicialização de desenvolvimento geram WebP responsivo com Sharp. Os originais são preservados; `public/optimized/` e `.generated/` são saídas locais regeneráveis. Não precisam ser commitadas.
+
+O identificador GA4 existente está centralizado em `src/content/site.json`. Cliques em WhatsApp, telefone e e-mail geram o evento `contact_click`, medindo canal e posição do link, sem incluir mensagens ou destinatários no evento personalizado. A confirmação do recebimento depende da conta do proprietário. Consulte [a documentação de imagens e Analytics](docs/ANALYTICS-PERFORMANCE.md).

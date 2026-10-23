@@ -19,6 +19,7 @@ import {
 import articles from "./content/articles.json";
 import categories from "./content/categories.json";
 import site from "./content/site.json";
+import { imageAttributes, optimizeArticleImages } from "./images.js";
 
 const base = import.meta.env.BASE_URL;
 const asset = (path) => `${base}${path}`;
@@ -160,7 +161,7 @@ function ArticleCard({ article }) {
       href={asset(`blog/artigos/${article.slug}.html`)}
     >
       <div className="article-image">
-        <img src={asset(article.image)} alt="" loading="lazy" />
+        <img {...imageAttributes(article.image)} alt="" loading="lazy" />
         <span>
           <ArrowUpRight size={22} />
         </span>
@@ -212,7 +213,7 @@ function Home() {
           <div className="orbit orbit-two" />
           <img
             className="mascot"
-            src={asset("images/coguisDeMochila2.png")}
+            {...imageAttributes("images/coguisDeMochila2.png")}
             alt="Coguis, nosso mascote cogumelo, de mochila e pronto para ajudar"
             fetchPriority="high"
           />
@@ -279,7 +280,11 @@ function Home() {
               <h3>{s.title}</h3>
               <p>{s.text}</p>
               {s.image && (
-                <img src={asset(`images/${s.image}`)} alt="" loading="lazy" />
+                <img
+                  {...imageAttributes(`images/${s.image}`)}
+                  alt=""
+                  loading="lazy"
+                />
               )}
             </a>
           ))}
@@ -288,7 +293,7 @@ function Home() {
       <section className="section shell about" id="sobre">
         <div className="about-image">
           <img
-            src={asset("images/coguisPrivacidadeConfianca2.png")}
+            {...imageAttributes("images/coguisPrivacidadeConfianca2.png")}
             alt="Mascote Coguis com um escudo, representando o cuidado com seus dados"
             loading="lazy"
           />
@@ -515,11 +520,13 @@ function Blog({ category }) {
   );
 }
 function Article({ article }) {
-  const body = article.body
-    .replaceAll("../../images/", asset("images/"))
-    .replaceAll("../categorias/", asset("blog/categorias/"))
-    .replaceAll("../artigos/", asset("blog/artigos/"))
-    .replaceAll("../../index.html", base);
+  const body = optimizeArticleImages(
+    article.body
+      .replaceAll("../../images/", asset("images/"))
+      .replaceAll("../categorias/", asset("blog/categorias/"))
+      .replaceAll("../artigos/", asset("blog/artigos/"))
+      .replaceAll("../../index.html", base),
+  );
   return (
     <article className="shell section article-page">
       <Breadcrumbs current={article.title} />
@@ -541,7 +548,7 @@ function Article({ article }) {
       </p>
       <img
         className="article-cover"
-        src={asset(article.image)}
+        {...imageAttributes(article.image)}
         alt={article.title}
       />
       <div className="prose" dangerouslySetInnerHTML={{ __html: body }} />

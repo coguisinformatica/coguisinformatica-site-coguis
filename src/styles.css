@@ -1258,3 +1258,9 @@ h2 > span {
     font-size: 11px;
   }
 }
+.article-image > img,
+.about-image > img,
+.article-cover,
+.prose img {
+  height: auto;
+}

@@ -75,7 +75,6 @@ const website = {
 };
 const sitemap = [];
 for (const path of ["index.html", ...files("blog")]) {
-  const source = readFileSync(path, "utf8");
   const home = path === "index.html";
   const article = articles.find((a) => path === `blog/artigos/${a.slug}.html`);
   const category = categories.find(
@@ -145,17 +144,15 @@ for (const path of ["index.html", ...files("blog")]) {
         ...b,
       })),
     });
-  // Keep the existing Analytics integration, without generating identifiers or account verification tokens.
-  const analytics =
-    home || path === "blog/index.html"
-      ? [...source.matchAll(/<script\b[^>]*>[\s\S]*?<\/script>/g)]
-          .map((m) => m[0])
-          .filter(
-            (s) =>
-              s.includes("googletagmanager.com/gtag/js") ||
-              s.includes("gtag('config'"),
-          )
-      : [];
+  // The identifier already existed on the site; no private account access is implied.
+  if (site.analyticsId && !/^G-[A-Z0-9]+$/.test(site.analyticsId))
+    throw new Error("GA4 identifier inválido");
+  const analytics = site.analyticsId
+    ? [
+        `<script async src="https://www.googletagmanager.com/gtag/js?id=${site.analyticsId}"></script>`,
+        `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${site.analyticsId}');</script>`,
+      ]
+    : [];
   const tags = [
     '<meta charset="UTF-8"/>',
     '<meta name="viewport" content="width=device-width, initial-scale=1.0"/>',

@@ -264,3 +264,111 @@ test("production HTML exposes content and consistent SEO without JavaScript", as
     await noJs.close();
   }
 });
+
+test("responsive images preserve originals and use much smaller WebP resources", async () => {
+  const { readFileSync, statSync, existsSync } = await import("node:fs");
+  const manifest = JSON.parse(readFileSync(".generated/images.json", "utf8"));
+  let originals = 0,
+    optimized = 0;
+  for (const [source, image] of Object.entries(manifest)) {
+    assert.ok(existsSync(source));
+    originals += statSync(source).size;
+    for (const variant of image.variants) {
+      assert.ok(existsSync(`dist/${variant.path}`));
+      assert.ok(variant.width <= image.width);
+    }
+    optimized += statSync(`dist/${image.variants.at(-1).path}`).size;
+  }
+  assert.ok(
+    optimized < originals * 0.25,
+    "Largest responsive variants should reduce source bytes by at least 75%",
+  );
+  const mobile = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    deviceScaleFactor: 1,
+  });
+  try {
+    const p = await mobile.newPage();
+    await p.route("**/*", (r) =>
+      r.request().url().startsWith("http://127.0.0.1:4174/")
+        ? r.continue()
+        : r.abort(),
+    );
+    await p.goto(origin + "/");
+    await p.locator(".mascot").evaluate((img) => img.decode());
+    assert.match(
+      await p.locator(".mascot").evaluate((img) => img.currentSrc),
+      /-480\.webp$/,
+    );
+    for (const path of [
+      "/",
+      "/blog/artigos/notebook-esquentando.html",
+      "/blog/artigos/o-que-e-presenca-digital.html",
+    ]) {
+      await p.goto(origin + path);
+      const images = await p
+        .locator("main img")
+        .evaluateAll((imgs) =>
+          imgs.map((img) => ({
+            src: img.getAttribute("src"),
+            srcset: img.getAttribute("srcset"),
+            width: img.getAttribute("width"),
+            height: img.getAttribute("height"),
+          })),
+        );
+      assert.ok(images.length > 0);
+      assert.ok(
+        images.every(
+          (i) =>
+            i.src.endsWith(".webp") &&
+            i.srcset &&
+            Number(i.width) > 0 &&
+            Number(i.height) > 0,
+        ),
+      );
+    }
+  } finally {
+    await mobile.close();
+  }
+});
+
+test("contact clicks measure channel and placement without message or destination data", async () => {
+  await page.goto(origin + "/");
+  await page.evaluate(() => {
+    window.contactEvents = [];
+    window.gtag = (...args) => window.contactEvents.push(args);
+    // Registered after the application listener so the event is measured before navigation is cancelled.
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("a")) e.preventDefault();
+    });
+  });
+  await page.locator(".hero-buttons a").first().click();
+  await page
+    .getByRole("link", { name: "Agendar atendimento pelo WhatsApp" })
+    .click();
+  await page.locator('footer a[href^="tel:"]').click();
+  await page.locator('footer a[href^="mailto:"]').click();
+  const events = await page.evaluate(() => window.contactEvents);
+  assert.deepEqual(
+    events.map((e) => [e[0], e[1], e[2].contact_method, e[2].placement]),
+    [
+      ["event", "contact_click", "whatsapp", "hero"],
+      ["event", "contact_click", "whatsapp", "contact"],
+      ["event", "contact_click", "phone", "footer"],
+      ["event", "contact_click", "email", "footer"],
+    ],
+  );
+  for (const event of events)
+    assert.deepEqual(Object.keys(event[2]).sort(), [
+      "contact_method",
+      "placement",
+      "transport_type",
+    ]);
+  await page.locator('footer a[href$="blog/index.html"]').click();
+  assert.equal((await page.evaluate(() => window.contactEvents)).length, 4);
+  await page.evaluate(() => {
+    window.gtag = undefined;
+  });
+  await page.locator(".hero-buttons a").first().click();
+  assert.equal((await page.evaluate(() => window.contactEvents)).length, 4);
+});
